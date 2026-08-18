@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace LanguageLearning.Infrastructure;
+namespace LanguageLearning.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(
+    public static IServiceCollection AddApplication(
         this IServiceCollection services)
     {
-        services.AddScoped<IWordRepository, WordRepository>();
+        services.AddScoped<IWordService, WordService>();
 
         return services;
     }
