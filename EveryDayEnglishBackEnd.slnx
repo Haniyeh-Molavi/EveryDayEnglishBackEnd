@@ -1,1 +1,7 @@
-<Solution />
+<Solution>
+  <Project Path="Language.Learning/Language.Learning.API.csproj" Id="06648dc0-3e58-4a0d-9da0-946f6402c9aa" />
+  <Project Path="LanguageLearning.Application/LanguageLearning.Application.csproj" Id="49f1ea4e-f0cc-4495-a1cb-1d1181528013" />
+  <Project Path="LanguageLearning.Domain/LanguageLearning.Domain.csproj" Id="7ef56e0b-c31e-4b76-a17d-768475de1f3a" />
+  <Project Path="LanguageLearning.Infrastructure/LanguageLearning.Infrastructure.csproj" Id="e9550085-0c3c-4a32-8518-87c5c9614b10" />
+  <Project Path="LanguageLearning.Tests/LanguageLearning.Tests.csproj" Id="cd3c5f28-1a1d-42f1-8def-e6f54db52586" />
+</Solution>

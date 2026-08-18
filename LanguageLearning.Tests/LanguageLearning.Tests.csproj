@@ -20,16 +20,4 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LanguageLearning.API\LanguageLearning.API.csproj" />
-    <ProjectReference Include="..\LanguageLearning.Application\LanguageLearning.Application.csproj" />
-    <ProjectReference Include="..\LanguageLearning.Infrastructure\LanguageLearning.Infrastructure.csproj" />
-    <ProjectReference Include="..\LanguageLearning.Domain\LanguageLearning.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="IntegrationTests\" />
-    <Folder Include="UnitTests\" />
-  </ItemGroup>
-
 </Project>
