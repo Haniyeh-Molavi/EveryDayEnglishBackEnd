@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LanguageLearning.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260818105524_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260818130737_Word")]
+    partial class Word
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,29 +31,60 @@ namespace LanguageLearning.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
 
-                    b.Property<int>("PartOfSpeech")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Pronunciation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid>("TranslationGroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("WordType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TranslationGroupId");
+
+                    b.HasIndex("Text", "Language");
+
                     b.ToTable("Words");
+                });
+
+            modelBuilder.Entity("TranslationGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TranslationGroups");
+                });
+
+            modelBuilder.Entity("LanguageLearning.Domain.Entities.Word", b =>
+                {
+                    b.HasOne("TranslationGroup", "TranslationGroup")
+                        .WithMany("Words")
+                        .HasForeignKey("TranslationGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TranslationGroup");
+                });
+
+            modelBuilder.Entity("TranslationGroup", b =>
+                {
+                    b.Navigation("Words");
                 });
 #pragma warning restore 612, 618
         }

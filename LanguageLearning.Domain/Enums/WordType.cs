@@ -1,6 +1,6 @@
 ﻿namespace LanguageLearning.Domain.Enums;
 
-public enum PartOfSpeech
+public enum WordType
 {
     Noun = 1,
     Verb = 2,

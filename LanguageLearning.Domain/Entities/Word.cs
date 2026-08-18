@@ -6,15 +6,16 @@ public class Word
 {
     public Guid Id { get; set; }
 
-    public string Text { get; set; } = string.Empty;
-
-    public string Pronunciation { get; set; } = string.Empty;
+    public string Text { get; set; } = null!;
 
     public Language Language { get; set; }
 
-    public PartOfSpeech PartOfSpeech { get; set; }
+    public WordType WordType { get; set; }
 
-    public Gender Gender { get; set; } = Gender.None;
+    public Gender Gender { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public Guid TranslationGroupId { get; set; }
+
+    public TranslationGroup TranslationGroup { get; set; }
+        = null!;
 }

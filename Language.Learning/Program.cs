@@ -19,6 +19,8 @@ builder.Services.AddInfrastructure();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpClient<TranslatorService>();
+
 var app = builder.Build();
 
 app.UseSwagger();

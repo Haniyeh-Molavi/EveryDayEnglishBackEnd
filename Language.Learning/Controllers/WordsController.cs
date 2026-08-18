@@ -13,7 +13,7 @@ public class WordsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(WordDetailsDto request)
+    public async Task<IActionResult> Create(TranslationDto request)
     {
         await _service.CreateAsync(request);
 

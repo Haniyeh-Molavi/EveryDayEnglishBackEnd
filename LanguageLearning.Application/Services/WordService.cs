@@ -1,5 +1,6 @@
 ﻿using LanguageLearning.Application.Interfaces;
 using LanguageLearning.Domain.Entities;
+using LanguageLearning.Domain.Enums;
 
 namespace LanguageLearning.Application.Services;
 
@@ -12,13 +13,17 @@ public class WordService : IWordService
         _wordRepository = wordRepository;
     }
 
-    public async Task CreateAsync(Word word)
+    public async Task CreateAsync(TranslationDto request)
     {
-        await _wordRepository.AddAsync(word);
-    }
 
-    public Task CreateAsync(WordDetailsDto request)
-    {
-        throw new NotImplementedException();
+        var word = new Word
+        {
+            Id = Guid.NewGuid(),
+            Text = request.Word,
+            Language = Enum.Parse<Language>(request.LanguageCode),
+            WordType = Enum.Parse<WordType>("Noun"),
+            Gender = Enum.Parse<Gender>(request.Gender ?? "Neutral"),
+        };
+        await _wordRepository.AddAsync(word);
     }
 }
