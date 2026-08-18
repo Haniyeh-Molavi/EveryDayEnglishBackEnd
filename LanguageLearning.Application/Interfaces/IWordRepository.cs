@@ -1,7 +1,10 @@
 ﻿using LanguageLearning.Domain.Entities;
 
+namespace LanguageLearning.Application.Interfaces;
+
 public interface IWordRepository
 {
-    Task AddAsync(Word word);
     Task<List<Word>> GetAllAsync();
+
+    Task AddAsync(Word word);
 }

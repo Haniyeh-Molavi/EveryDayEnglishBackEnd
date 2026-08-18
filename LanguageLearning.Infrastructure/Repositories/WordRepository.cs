@@ -1,4 +1,5 @@
-﻿using LanguageLearning.Domain.Entities;
+﻿using LanguageLearning.Application.Interfaces;
+using LanguageLearning.Domain.Entities;
 using LanguageLearning.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 public class WordRepository : IWordRepository
