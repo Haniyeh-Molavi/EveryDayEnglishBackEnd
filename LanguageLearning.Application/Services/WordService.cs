@@ -1,23 +1,24 @@
-﻿public class WordService : IWordService
-{
-    private readonly IWordService _services;
+﻿using LanguageLearning.Application.Interfaces;
+using LanguageLearning.Domain.Entities;
 
-    public WordService(IWordService services)
+namespace LanguageLearning.Application.Services;
+
+public class WordService : IWordService
+{
+    private readonly IWordRepository _wordRepository;
+
+    public WordService(IWordRepository wordRepository)
     {
-        _services = services;
+        _wordRepository = wordRepository;
     }
 
-    public async Task CreateAsync(WordDetailsDto request)
+    public async Task CreateAsync(Word word)
     {
-        var word = new WordDetailsDto
-        {
-            Word = request.Word,
-            Translation = request.Translation,
-            Definition = request.Definition,
-            ExampleSentence = request.ExampleSentence,
-            Pronunciation = request.Pronunciation
-        };
+        await _wordRepository.AddAsync(word);
+    }
 
-        await _services.CreateAsync(word);
+    public Task CreateAsync(WordDetailsDto request)
+    {
+        throw new NotImplementedException();
     }
 }
