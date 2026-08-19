@@ -16,6 +16,9 @@ public class Word
 
     public Guid TranslationGroupId { get; set; }
 
-    public TranslationGroup TranslationGroup { get; set; }
-        = null!;
+    public TranslationGroup TranslationGroup { get; set; } = null!;
+
+    public int CategoryId { get; set; }
+
+    public Category Category { get; set; } = null!;
 }
