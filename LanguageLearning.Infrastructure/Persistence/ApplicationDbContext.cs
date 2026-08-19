@@ -1,5 +1,6 @@
 ﻿using LanguageLearning.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace LanguageLearning.Infrastructure.Persistence;
 
@@ -12,7 +13,7 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Word> Words => Set<Word>();
-
+    public DbSet<Category> Categories { get; set; }
     public DbSet<TranslationGroup> TranslationGroups
         => Set<TranslationGroup>();
 
@@ -35,5 +36,10 @@ public class ApplicationDbContext : DbContext
                 x.Text,
                 x.Language
             });
+
+        builder.Entity<Category>()
+            .HasMany(c => c.Words)
+            .WithOne(w => w.Category)
+            .HasForeignKey(w => w.CategoryId);
     }
 }
