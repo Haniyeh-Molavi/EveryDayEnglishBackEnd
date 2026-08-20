@@ -12,13 +12,13 @@ public class TranslatorService
         _configuration = configuration;
     }
 
-    public async Task<string> TranslateAsync(string text, List<string> targetLanguages)
+    public async Task<string> TranslateAsync(string text, string targetLanguages)
     {
         var key = _configuration["AzureTranslator:Key"];
         var endpoint = _configuration["AzureTranslator:Endpoint"];
         var region = _configuration["AzureTranslator:Region"];
 
-        var route = $"translate?api-version=3.0&to={string.Join(",", targetLanguages)}";
+        var route = $"translate?api-version=3.0&to={targetLanguages}";
         var body = new[] { new { Text = text } };
 
         var request = new HttpRequestMessage(

@@ -15,30 +15,56 @@ public class WordService : IWordService
         _translator = translator;
     }
 
+    private async Task<string> TranslateToEnglishAsync(TranslationDto dto)
+    {
+        var result_en = await _translator.TranslateAsync(dto.Word, "en");
+        var translationGroup = new TranslationGroup
+        {
+            Words= new List<Word>
+            {
+                new Word
+                {
+                    Id = Guid.NewGuid(),
+                    Text = result_en,
+                    Language = Language.English,
+                    WordType = Enum.Parse<WordType>("Noun"),
+                    Gender = Enum.Parse<Gender>("None"),
+                    Category = new Category { Name = dto.Category }
+                },
+                new Word
+                {
+                    Id = Guid.NewGuid(),
+                    Text = dto.Word,
+                    Language = Enum.Parse<Language>(dto.LanguageCode),
+                    WordType = Enum.Parse<WordType>("Noun"),
+                    Gender
+            }
+        };
+        return await _translator.TranslateAsync(dto.Word, targetLanguages);
+    }
+
+    private async Task<string> TranslateToPersianAsync(TranslationDto dto)
+    {
+        List<string> targetLanguages = ["en", "pt", "fr"];
+
+        targetLanguages.Remove(dto.LanguageCode);
+        var result_en = await _translator.TranslateAsync(translationDto.Word, targetLanguages);
+        return await _translator.TranslateAsync(dto.Word, targetLanguages);
+    }
+
+    private async Task<string> TranslateToPortugueseAsync(TranslationDto dto)
+    {
+        List<string> targetLanguages = ["en", "pt", "fr"];
+
+        targetLanguages.Remove(dto.LanguageCode);
+        var result_en = await _translator.TranslateAsync(translationDto.Word, targetLanguages);
+        return await _translator.TranslateAsync(dto.Word, targetLanguages);
+    }
+
     public async Task CreateAsync(TranslationDto translationDto)
     {
-        List<string> targetLanguages = ["en", "es", "fr"];
-
-        switch (translationDto.LanguageCode)
-        {
-            case "en":
-                targetLanguages.Remove("en");
-                var result_en = await _translator.TranslateAsync(translationDto.Word, targetLanguages);
-                break;
-            case "es":
-                targetLanguages.Remove("es");
-                var result_es = await _translator.TranslateAsync(translationDto.Word, targetLanguages);
-                break;
-            case "fr":
-                targetLanguages.Remove("fr");
-                var result_fr = await _translator.TranslateAsync(translationDto.Word, targetLanguages);
-                break;
-            default:
-                targetLanguages.Remove("en");
-                var result = await _translator.TranslateAsync(translationDto.Word, targetLanguages);
-                break;
-        }
-
+        var translations = await TranslateToEnglishAsync(translationDto);
+        
             var word = new Word
         {
             Id = Guid.NewGuid(),
