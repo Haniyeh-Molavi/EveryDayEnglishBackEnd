@@ -1,4 +1,5 @@
 ﻿using LanguageLearning.Application.Interfaces;
+using LanguageLearning.Application.Mappings;
 using LanguageLearning.Domain.Entities;
 using LanguageLearning.Domain.Enums;
 
@@ -8,75 +9,98 @@ public class WordService : IWordService
 {
     private readonly IWordRepository _wordRepository;
     private readonly TranslatorService _translator;
+    private readonly IWordMetadataService _wordMetadataService;
 
-    public WordService(IWordRepository wordRepository, TranslatorService translator)
+    public WordService(
+        IWordRepository wordRepository,
+        TranslatorService translator,
+        IWordMetadataService wordMetadataService)
     {
         _wordRepository = wordRepository;
         _translator = translator;
+        _wordMetadataService = wordMetadataService;
     }
 
-    private async Task<string> TranslateToEnglishAsync(TranslationDto dto)
+    public async Task CreateAsync(TranslationDto dto)
     {
-        var result_en = await _translator.TranslateAsync(dto.Word, "en");
         var translationGroup = new TranslationGroup
         {
-            Words= new List<Word>
-            {
-                new Word
-                {
-                    Id = Guid.NewGuid(),
-                    Text = result_en,
-                    Language = Language.English,
-                    WordType = Enum.Parse<WordType>("Noun"),
-                    Gender = Enum.Parse<Gender>("None"),
-                    Category = new Category { Name = dto.Category }
-                },
-                new Word
-                {
-                    Id = Guid.NewGuid(),
-                    Text = dto.Word,
-                    Language = Enum.Parse<Language>(dto.LanguageCode),
-                    WordType = Enum.Parse<WordType>("Noun"),
-                    Gender
-            }
+            Id = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow
         };
-        return await _translator.TranslateAsync(dto.Word, targetLanguages);
-    }
 
-    private async Task<string> TranslateToPersianAsync(TranslationDto dto)
-    {
-        List<string> targetLanguages = ["en", "pt", "fr"];
+        // 1. Always get English first
+        var englishWord =
+            dto.LanguageCode.ToLower() == "en"
+                ? dto.Word
+                : await _translator.TranslateAsync(
+                    dto.Word,
+                    dto.LanguageCode,
+                    "en");
 
-        targetLanguages.Remove(dto.LanguageCode);
-        var result_en = await _translator.TranslateAsync(translationDto.Word, targetLanguages);
-        return await _translator.TranslateAsync(dto.Word, targetLanguages);
-    }
+        // 2. Get Persian
+        var persianWord =
+            dto.LanguageCode.ToLower() == "fa"
+                ? dto.Word
+                : await _translator.TranslateAsync(
+                    englishWord,
+                    "en",
+                    "fa");
 
-    private async Task<string> TranslateToPortugueseAsync(TranslationDto dto)
-    {
-        List<string> targetLanguages = ["en", "pt", "fr"];
+        // 3. Get Portuguese
+        var portugueseWord =
+            dto.LanguageCode.ToLower() == "pt"
+                ? dto.Word
+                : await _translator.TranslateAsync(
+                    englishWord,
+                    "en",
+                    "pt");
 
-        targetLanguages.Remove(dto.LanguageCode);
-        var result_en = await _translator.TranslateAsync(translationDto.Word, targetLanguages);
-        return await _translator.TranslateAsync(dto.Word, targetLanguages);
-    }
+        // 4. Analyze Portuguese word
+        var metadata =
+            await _wordMetadataService.AnalyzeAsync(
+                portugueseWord,
+                "pt");
 
-    public async Task CreateAsync(TranslationDto translationDto)
-    {
-        var translations = await TranslateToEnglishAsync(translationDto);
-        
-            var word = new Word
+        var category = new Category
+        {
+            Name = dto.Category
+        };
+
+        // English
+        translationGroup.Words.Add(new Word
         {
             Id = Guid.NewGuid(),
-            Text = translationDto.Word,
-            Language = Enum.Parse<Language>(translationDto.LanguageCode),
-            //TODO: Implement the WordType
-            WordType = Enum.Parse<WordType>("Noun"),
-            //TODO: Implement the Gender
-            Gender = Enum.Parse<Gender>(translationDto.Gender ?? "Neutral"),
-            //TODO: Implement the Category
-            Category = new Category { Name = translationDto.Category }
-        };
-        await _wordRepository.AddAsync(word);
+            Text = englishWord,
+            Language = Language.English,
+            WordType = metadata.WordType,
+            Gender = Gender.None,
+            Category = category
+        });
+
+        // Persian
+        translationGroup.Words.Add(new Word
+        {
+            Id = Guid.NewGuid(),
+            Text = persianWord,
+            Language = Language.Persian,
+            WordType = metadata.WordType,
+            Gender = Gender.None,
+            Category = category
+        });
+
+        // Portuguese
+        translationGroup.Words.Add(new Word
+        {
+            Id = Guid.NewGuid(),
+            Text = portugueseWord,
+            Language = Language.Portuguese,
+            WordType = metadata.WordType,
+            Gender = metadata.Gender,
+            Category = category
+        });
+
+        await _wordRepository.AddTranslationGroupAsync(
+            translationGroup);
     }
 }

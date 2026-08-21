@@ -1,4 +1,6 @@
 ﻿using LanguageLearning.Application;
+using LanguageLearning.Application.Interfaces;
+using LanguageLearning.Application.Services;
 using LanguageLearning.Infrastructure;
 using LanguageLearning.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -19,8 +21,10 @@ builder.Services.AddInfrastructure();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHttpClient<TranslatorService>();
+builder.Services.AddHttpClient<ITranslatorService, TranslatorService>();
+builder.Services.AddScoped<IWordService, WordService>();
 
+builder.Services.AddScoped<IWordRepository, WordRepository>();
 var app = builder.Build();
 
 app.UseSwagger();
