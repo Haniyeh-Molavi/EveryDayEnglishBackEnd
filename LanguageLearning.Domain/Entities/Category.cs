@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-public class Category
+namespace LanguageLearning.Domain.Entities
 {
-    public int Id { get; set; }
+    public class Category
+    {
+        public Guid Id { get; set; }
 
-    public string Name { get; set; } = string.Empty;
-
-    public ICollection<Word> Words { get; set; } = new List<Word>();
+        public string Name { get; set; }
+    }
 }

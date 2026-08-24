@@ -6,12 +6,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace LanguageLearning.Infrastructure.ExternalServices.AzureTranslator;
 
-public class AzureTranslatorService : ITranslatorService
+public class TranslatorService : ITranslatorService
 {
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
 
-    public AzureTranslatorService(
+    public TranslatorService(
         HttpClient httpClient,
         IConfiguration configuration)
     {

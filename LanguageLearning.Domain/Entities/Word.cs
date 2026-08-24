@@ -1,24 +1,31 @@
 ﻿using LanguageLearning.Domain.Enums;
 
-namespace LanguageLearning.Domain.Entities;
-
+namespace LanguageLearning.Domain.Entities
+{
 public class Word
 {
     public Guid Id { get; set; }
 
-    public string Text { get; set; } = null!;
+    public string EnglishWord { get; set; }
 
-    public Language Language { get; set; }
+    public string PersianWord { get; set; }
 
-    public WordType WordType { get; set; }
+    public string PortugueseWord { get; set; }
 
-    public Gender Gender { get; set; }
+    public WordType Type { get; set; }
 
-    public Guid TranslationGroupId { get; set; }
+    public Gender PortugueseGender { get; set; }
 
-    public TranslationGroup TranslationGroup { get; set; } = null!;
+    public string EnglishAudioUrl { get; set; }
 
-    public int CategoryId { get; set; }
+    public string PersianAudioUrl { get; set; }
 
-    public Category Category { get; set; } = null!;
+    public string PortugueseAudioUrl { get; set; }
+
+    public Guid CategoryId { get; set; }
+
+    public Category Category { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+}
 }
