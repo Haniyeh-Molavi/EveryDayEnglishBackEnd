@@ -4,18 +4,16 @@ using System.Reflection.Emit;
 
 namespace LanguageLearning.Infrastructure.Persistence;
 
+using Microsoft.EntityFrameworkCore;
+
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(
-        DbContextOptions<ApplicationDbContext> options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
 
-    public DbSet<Word> Words => Set<Word>();
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<TranslationGroup> TranslationGroups
-        => Set<TranslationGroup>();
+    public DbSet<Word> Words { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     { }

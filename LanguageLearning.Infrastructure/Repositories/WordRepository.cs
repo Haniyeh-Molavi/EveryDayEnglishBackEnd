@@ -12,7 +12,7 @@ public class WordRepository : IWordRepository
     }
     public async Task AddTranslationGroupAsync(TranslationGroup group)
     {
-        _context.TranslationGroups.Add(group);
+       _context.Add(group);
 
         await _context.SaveChangesAsync();
     }
