@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using global::Project.Application.Auth.Common;
+using LanguageLearning.Application.Auth.Common;
 using LanguageLearning.Application.Interfaces;
 using LanguageLearning.Domain.Entities;
 using MediatR;

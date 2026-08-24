@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
  using MediatR;
-using Project.Application.Auth.Common;
+using LanguageLearning.Application.Auth.Common;
 namespace LanguageLearning.Application.Auth.Register
 {
   

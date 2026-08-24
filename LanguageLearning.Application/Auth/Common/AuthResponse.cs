@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-namespace Project.Application.Auth.Common;
+namespace LanguageLearning.Application.Auth.Common;
 
 public class AuthResponse
 {
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; } = Guid.Empty;
     public string Email { get; set; } = string.Empty;
     public string Token { get; set; } = string.Empty;
 }

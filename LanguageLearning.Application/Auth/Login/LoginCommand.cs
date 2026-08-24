@@ -1,13 +1,15 @@
 ﻿using MediatR;
-using Project.Application.Auth.Common;
+using LanguageLearning.Application.Auth.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace LanguageLearning.Application.Auth.Login
 {
-    public record LoginCommand(
-    string Email,
-    string Password
-) : IRequest<AuthResponse>;
+    public class LoginCommand : IRequest<AuthResponse>
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
 }
+

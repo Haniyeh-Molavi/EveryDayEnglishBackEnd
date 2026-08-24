@@ -1,9 +1,11 @@
 ﻿using LanguageLearning.Application;
 using LanguageLearning.Application.Interfaces;
 using LanguageLearning.Application.Services;
+using LanguageLearning.Domain.Entities;
 using LanguageLearning.Infrastructure;
 using LanguageLearning.Infrastructure.ExternalServices.AzureTranslator;
 using LanguageLearning.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient<ITranslatorService, TranslatorService>();
 builder.Services.AddScoped<IWordService, WordService>();
+
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IWordRepository, WordRepository>();
 var app = builder.Build();
