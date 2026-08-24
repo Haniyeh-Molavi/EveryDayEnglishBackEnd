@@ -16,5 +16,4 @@ namespace LanguageLearning.Domain.Entities
 
         public DateTime SavedAt { get; set; }
     }
-`
 }

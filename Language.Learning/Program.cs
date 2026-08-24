@@ -2,6 +2,7 @@
 using LanguageLearning.Application.Interfaces;
 using LanguageLearning.Application.Services;
 using LanguageLearning.Infrastructure;
+using LanguageLearning.Infrastructure.ExternalServices.AzureTranslator;
 using LanguageLearning.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
