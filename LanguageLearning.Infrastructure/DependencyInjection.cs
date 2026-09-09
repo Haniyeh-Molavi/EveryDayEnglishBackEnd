@@ -22,7 +22,7 @@ IConfiguration configuration)
     {
         services.AddScoped<IWordRepository, WordRepository>();
 
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 

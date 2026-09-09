@@ -9,12 +9,12 @@ namespace LanguageLearning.Application.Services;
 public class WordService : IWordService
 {
     private readonly IWordRepository _wordRepository;
-    private readonly TranslatorService _translator;
+    private readonly ITranslatorService _translator;
     private readonly IWordMetadataService _wordMetadataService;
 
     public WordService(
         IWordRepository wordRepository,
-        TranslatorService translator,
+        ITranslatorService translator,
         IWordMetadataService wordMetadataService)
     {
         _wordRepository = wordRepository;

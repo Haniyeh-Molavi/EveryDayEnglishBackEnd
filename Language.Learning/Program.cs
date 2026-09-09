@@ -25,12 +25,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient<ITranslatorService, TranslatorService>();
-builder.Services.AddScoped<IWordService, WordService>();
-
-builder.Services
-    .AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IWordRepository, WordRepository>();
 var app = builder.Build();

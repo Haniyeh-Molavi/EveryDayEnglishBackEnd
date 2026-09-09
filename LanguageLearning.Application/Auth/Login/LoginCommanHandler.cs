@@ -1,9 +1,7 @@
 ﻿using LanguageLearning.Application.Interfaces;
 using LanguageLearning.Domain.Entities;
 using MediatR;
-using Microsoft.AspNet.Identity;
-using LanguageLearning.Application.Auth.Login;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 using LanguageLearning.Application.Auth.Common;
 
 namespace LanguageLearning.Application.Auth.Login
