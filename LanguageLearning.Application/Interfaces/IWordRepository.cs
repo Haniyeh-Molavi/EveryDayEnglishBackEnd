@@ -4,7 +4,6 @@ namespace LanguageLearning.Application.Interfaces;
 
 public interface IWordRepository
 {
-    Task<List<Word>> GetAllAsync();
-
-    Task AddAsync(Word word);
+    Task AddTranslationGroupAsync(
+        TranslationGroup translationGroup);
 }

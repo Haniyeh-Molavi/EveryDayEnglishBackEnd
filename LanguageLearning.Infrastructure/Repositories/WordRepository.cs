@@ -4,22 +4,16 @@ using LanguageLearning.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 public class WordRepository : IWordRepository
 {
-    private readonly ApplicationDbContext _db;
+    private readonly ApplicationDbContext _context;
 
-    public WordRepository(ApplicationDbContext db)
+    public WordRepository(ApplicationDbContext context)
     {
-        _db = db;
+        _context = context;
     }
-
-    public async Task AddAsync(Word word)
+    public async Task AddTranslationGroupAsync(TranslationGroup group)
     {
-        _db.Words.Add(word);
+       _context.Add(group);
 
-        await _db.SaveChangesAsync();
-    }
-
-    public async Task<List<Word>> GetAllAsync()
-    {
-        return await _db.Words.ToListAsync();
+        await _context.SaveChangesAsync();
     }
 }

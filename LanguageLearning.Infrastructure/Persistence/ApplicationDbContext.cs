@@ -4,7 +4,25 @@ using System.Reflection.Emit;
 
 namespace LanguageLearning.Infrastructure.Persistence;
 
-public class ApplicationDbContext : DbContext
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
+//public class ApplicationDbContext : DbContext
+//{
+//    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+//        : base(options)
+//    {
+//    }
+
+//    public DbSet<Word> Words { get; set; }
+
+//    protected override void OnModelCreating(ModelBuilder builder)
+//    { }
+
+//}
+
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options)
@@ -12,34 +30,31 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<Word> Words => Set<Word>();
+    public DbSet<Word> Words { get; set; }
+    public DbSet<UserWord> UserWords { get; set; }
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<Category> Categories { get; set; }
-    public DbSet<TranslationGroup> TranslationGroups
-        => Set<TranslationGroup>();
+    public DbSet<CommonSentence> CommonSentences { get; set; }
+    public DbSet<TranslationGroup> TranslationGroups { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<Word>()
-            .Property(x => x.Text)
-            .HasMaxLength(200);
+        builder.Entity<UserWord>()
+            .HasKey(uw => new { uw.UserId, uw.WordId });
 
-        builder.Entity<Word>()
-            .HasOne(x => x.TranslationGroup)
-            .WithMany(x => x.Words)
-            .HasForeignKey(x => x.TranslationGroupId);
+        builder.Entity<UserWord>()
+            .HasOne(uw => uw.User)
+            .WithMany(u => u.Words)
+            .HasForeignKey(uw => uw.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Entity<Word>()
-            .HasIndex(x => new
-            {
-                x.Text,
-                x.Language
-            });
-
-        builder.Entity<Category>()
-            .HasMany(c => c.Words)
-            .WithOne(w => w.Category)
-            .HasForeignKey(w => w.CategoryId);
+        builder.Entity<UserWord>()
+            .HasOne(uw => uw.Word)
+            .WithMany()
+            .HasForeignKey(uw => uw.WordId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
+
 }
