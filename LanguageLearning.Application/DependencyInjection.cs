@@ -1,4 +1,4 @@
-﻿using LanguageLearning.Application.Interfaces;
+﻿using LanguageLearning.Application.Interfaces.IService;
 using LanguageLearning.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 

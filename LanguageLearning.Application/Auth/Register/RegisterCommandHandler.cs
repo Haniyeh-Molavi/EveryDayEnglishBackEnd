@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using LanguageLearning.Application.Auth.Common;
-using LanguageLearning.Application.Interfaces;
+using LanguageLearning.Application.Interfaces.IService;
 using LanguageLearning.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

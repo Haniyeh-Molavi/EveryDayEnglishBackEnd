@@ -1,4 +1,4 @@
-﻿using LanguageLearning.Application.Interfaces;
+﻿using LanguageLearning.Application.Interfaces.IRepository;
 using LanguageLearning.Domain.Entities;
 using LanguageLearning.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +10,21 @@ public class WordRepository : IWordRepository
     {
         _context = context;
     }
-    public async Task AddTranslationGroupAsync(TranslationGroup group)
-    {
-       _context.Add(group);
 
-        await _context.SaveChangesAsync();
+    public Task AddCategoryAsync(Category category)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task AddTranslationGroupAsync(TranslationGroup group)
+    {
+        throw new NotImplementedException();
+    }
+
+
+
+    public Task SaveChangesAsync()
+    {
+        throw new NotImplementedException();
     }
 }

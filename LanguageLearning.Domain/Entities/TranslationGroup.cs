@@ -1,7 +1,4 @@
 ﻿using LanguageLearning.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 public class TranslationGroup
 {

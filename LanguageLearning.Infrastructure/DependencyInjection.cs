@@ -1,5 +1,6 @@
 ﻿using LanguageLearning.Application.Common.Models;
-using LanguageLearning.Application.Interfaces;
+using LanguageLearning.Application.Interfaces.IRepository;
+using LanguageLearning.Application.Interfaces.IService;
 using LanguageLearning.Domain.Entities;
 using LanguageLearning.Infrastructure.Authentication;
 using LanguageLearning.Infrastructure.Persistence;

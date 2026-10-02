@@ -1,13 +1,14 @@
 ﻿using LanguageLearning.Application;
-using LanguageLearning.Application.Interfaces;
+using LanguageLearning.Application.Interfaces.IRepository;
+using LanguageLearning.Application.Interfaces.IService;
 using LanguageLearning.Application.Services;
 using LanguageLearning.Domain.Entities;
 using LanguageLearning.Infrastructure;
-using LanguageLearning.Infrastructure.ExternalServices.AzureTranslator;
 using LanguageLearning.Infrastructure.Persistence;
+using LanguageLearning.Infrastructure.Repositories;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MediatR;
 using System.Reflection;
 
 
@@ -33,9 +34,16 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHttpClient<ITranslatorService, TranslatorService>();
+builder.Services.AddHttpClient<IWordInfoService, GeminiWordInfoService>(client =>
+{
+    client.BaseAddress = new Uri("https://generativelanguage.googleapis.com/v1beta/");
+});
+
+builder.Services.AddScoped<IWordService, WordService>();
+builder.Services.AddScoped<IWordService, WordService>();
 
 builder.Services.AddScoped<IWordRepository, WordRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 var app = builder.Build();
 
 app.UseSwagger();
