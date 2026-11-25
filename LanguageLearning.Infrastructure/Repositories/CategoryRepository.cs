@@ -1,37 +1,28 @@
-﻿using LanguageLearning.Application.Interfaces.IRepository;
+using LanguageLearning.Application.Interfaces.IRepository;
 using LanguageLearning.Domain.Entities;
 using LanguageLearning.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace LanguageLearning.Infrastructure.Repositories
+namespace LanguageLearning.Infrastructure.Repositories;
+
+public class CategoryRepository : ICategoryRepository
 {
-    public class CategoryRepository : ICategoryRepository
+    private readonly ApplicationDbContext _context;
 
+    public CategoryRepository(ApplicationDbContext context)
     {
-        private readonly ApplicationDbContext _context;
-
-        public CategoryRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task AddCategoryAsync(Category category)
-        {
-            await _context.Categories.AddAsync(category);
-        }
-
-        public Task AddTranslationGroupAsync(TranslationGroup group)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Category?> GetCategoryByNameAsync(string name)
-        {
-            return await _context.Categories
-         .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
-        }
+        _context = context;
     }
+
+    public async Task<Category?> GetByNameAsync(string name)
+    {
+        return await _context.Categories
+            .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
     }
+
+    public async Task AddAsync(Category category)
+    {
+        _context.Categories.Add(category);
+        await _context.SaveChangesAsync();
+    }
+}

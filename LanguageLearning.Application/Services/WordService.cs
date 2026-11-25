@@ -1,6 +1,6 @@
-﻿using LanguageLearning.Application.Interfaces.IRepository;
+using LanguageLearning.Application.DTOs.Words;
+using LanguageLearning.Application.Interfaces.IRepository;
 using LanguageLearning.Application.Interfaces.IService;
-using LanguageLearning.Application.Mappings;
 using LanguageLearning.Domain.Entities;
 using LanguageLearning.Domain.Enums;
 
@@ -8,29 +8,81 @@ namespace LanguageLearning.Application.Services;
 
 public class WordService : IWordService
 {
-    private readonly IWordInfoService _wordInfoService;
     private readonly IWordRepository _wordRepository;
     private readonly ICategoryRepository _categoryRepository;
+    private readonly ITranslationService _translationService;
 
     public WordService(
-        IWordInfoService wordInfoService,
         IWordRepository wordRepository,
-        ICategoryRepository categoryRepository
-    )
+        ICategoryRepository categoryRepository,
+        ITranslationService translationService)
     {
-        _wordInfoService = wordInfoService;
         _wordRepository = wordRepository;
         _categoryRepository = categoryRepository;
+        _translationService = translationService;
+    }
+
+    public async Task<WordDto> CreateAsync(CreateWordRequest request)
+    {
+        var text = request.Word.Trim();
+
+        if (string.IsNullOrWhiteSpace(text))
+            throw new ArgumentException("Word is required.");
+
+        if (!Enum.IsDefined(request.Language))
+            throw new ArgumentException("Language must be 1 (English), 2 (Portuguese) or 3 (Persian).");
+
+        if (request.Type != null && !Enum.IsDefined(request.Type.Value))
+            throw new ArgumentException("Type is not valid.");
+
+        if (request.PortugueseGender != null && !Enum.IsDefined(request.PortugueseGender.Value))
+            throw new ArgumentException("PortugueseGender is not valid.");
+
+        if (await _wordRepository.ExistsAsync(text, request.Language))
+            throw new ArgumentException($"The word \"{text}\" already exists.");
+
+        // Ask Gemini for the translations, type, gender and category
+        var info = await _translationService.GetWordInfoAsync(text, request.Language);
+
+        // Values the user sent win over the ones Gemini suggests
+        var type = request.Type is null or WordType.None ? info.Type : request.Type.Value;
+        if (type == WordType.None)
+            throw new ArgumentException("Could not detect the word type. Please send it in the request.");
+
+        var gender = request.PortugueseGender ?? info.PortugueseGender;
+
+        var categoryName = string.IsNullOrWhiteSpace(request.Category)
+            ? info.Category
+            : request.Category;
+
+        var category = await GetOrCreateCategoryAsync(categoryName);
+
+        var word = new Word
+        {
+            Id = Guid.NewGuid(),
+            EnglishWord = info.English,
+            PersianWord = info.Persian,
+            PortugueseWord = info.Portuguese,
+            Type = type,
+            PortugueseGender = gender,
+            CategoryId = category.Id,
+            Category = category,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _wordRepository.AddAsync(word);
+
+        return WordDto.FromEntity(word);
     }
 
     private async Task<Category> GetOrCreateCategoryAsync(string name)
     {
+        name = name.Trim();
+
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Category is required.");
 
-        name = name.Trim();
-
-        var category = await _categoryRepository.GetCategoryByNameAsync(name);
+        var category = await _categoryRepository.GetByNameAsync(name);
 
         if (category == null)
         {
@@ -40,52 +92,9 @@ public class WordService : IWordService
                 Name = name
             };
 
-            await _wordRepository.AddCategoryAsync(category);
+            await _categoryRepository.AddAsync(category);
         }
 
         return category;
-    }
-
-    public async Task CreateAsync(TranslationDto dto)
-    {
-        if (dto == null)
-            throw new ArgumentNullException(nameof(dto));
-
-        var info = await _wordInfoService.GetWordInfoAsync(dto.Word, dto.LanguageCode);
-
-        WordType? type = dto.WordType != 0 ? dto.WordType : info.Type;
-
-        if (type == null)
-            throw new ArgumentException("Word type is required and could not be detected.");
-
-        var gender = dto.Gender ?? info.PortugueseGender;
-
-        var categoryName = string.IsNullOrWhiteSpace(dto.Category)
-            ? info.SuggestedCategory
-            : dto.Category;
-
-        var category = await GetOrCreateCategoryAsync(categoryName ?? "");
-
-        var word = new Word
-        {
-            Id = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
-            EnglishWord = info.English,
-            PersianWord = info.Persian,
-            PortugueseWord = info.Portuguese,
-            Type = type ?? WordType.None ,
-            PortugueseGender = gender,
-            Category = category,
-            CategoryId = category.Id
-        };
-
-        var group = new TranslationGroup
-        {
-            Id = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow
-        };
-        group.Words.Add(word);
-
-        await _wordRepository.AddTranslationGroupAsync(group);
     }
 }

@@ -1,4 +1,4 @@
-﻿using LanguageLearning.Application.Interfaces.IService;
+using LanguageLearning.Application.Interfaces.IService;
 using LanguageLearning.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -6,10 +6,9 @@ namespace LanguageLearning.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(
-        this IServiceCollection services)
+    public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<IWordMetadataService, WordMetadataService>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IWordService, WordService>();
 
         return services;

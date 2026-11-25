@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace LanguageLearning.Domain.Entities;
 
-namespace LanguageLearning.Domain.Entities
+public class CommonSentence
 {
-    public class CommonSentence
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string EnglishText { get; set; }
+    public string EnglishText { get; set; } = string.Empty;
 
-        public string PersianText { get; set; }
+    public string PersianText { get; set; } = string.Empty;
 
-        public string PortugueseText { get; set; }
+    public string PortugueseText { get; set; } = string.Empty;
 
-        public bool IsActive { get; set; }
-    }
+    public bool IsActive { get; set; }
 }

@@ -1,7 +1,11 @@
-﻿using LanguageLearning.Application.Interfaces.IRepository;
+using LanguageLearning.Application.Interfaces.IRepository;
 using LanguageLearning.Domain.Entities;
+using LanguageLearning.Domain.Enums;
 using LanguageLearning.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+
+namespace LanguageLearning.Infrastructure.Repositories;
+
 public class WordRepository : IWordRepository
 {
     private readonly ApplicationDbContext _context;
@@ -11,20 +15,22 @@ public class WordRepository : IWordRepository
         _context = context;
     }
 
-    public Task AddCategoryAsync(Category category)
+    public async Task<bool> ExistsAsync(string text, Language language)
     {
-        throw new NotImplementedException();
+        text = text.ToLower();
+
+        return language switch
+        {
+            Language.English => await _context.Words.AnyAsync(w => w.EnglishWord.ToLower() == text),
+            Language.Portuguese => await _context.Words.AnyAsync(w => w.PortugueseWord.ToLower() == text),
+            Language.Persian => await _context.Words.AnyAsync(w => w.PersianWord.ToLower() == text),
+            _ => false
+        };
     }
 
-    public Task AddTranslationGroupAsync(TranslationGroup group)
+    public async Task AddAsync(Word word)
     {
-        throw new NotImplementedException();
-    }
-
-
-
-    public Task SaveChangesAsync()
-    {
-        throw new NotImplementedException();
+        _context.Words.Add(word);
+        await _context.SaveChangesAsync();
     }
 }

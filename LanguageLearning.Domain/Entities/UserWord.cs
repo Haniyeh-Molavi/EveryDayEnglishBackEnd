@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace LanguageLearning.Domain.Entities;
 
-namespace LanguageLearning.Domain.Entities
+// A word that a user saved to their personal list
+public class UserWord
 {
-    public class UserWord
-    {
-        public Guid UserId { get; set; }
+    public Guid UserId { get; set; }
 
-        public User User { get; set; }
+    public ApplicationUser User { get; set; } = null!;
 
-        public Guid WordId { get; set; }
+    public Guid WordId { get; set; }
 
-        public Word Word { get; set; }
+    public Word Word { get; set; } = null!;
 
-        public DateTime SavedAt { get; set; }
-    }
+    public DateTime SavedAt { get; set; }
 }

@@ -1,10 +1,12 @@
-﻿using LanguageLearning.Domain.Entities;
+using LanguageLearning.Domain.Entities;
+using LanguageLearning.Domain.Enums;
 
 namespace LanguageLearning.Application.Interfaces.IRepository;
 
 public interface IWordRepository
 {
-    Task AddTranslationGroupAsync(TranslationGroup group);
-    Task AddCategoryAsync(Category category);
-    Task SaveChangesAsync();
+    // True if a word with this text already exists in the given language
+    Task<bool> ExistsAsync(string text, Language language);
+
+    Task AddAsync(Word word);
 }

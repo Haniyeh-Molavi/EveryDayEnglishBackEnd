@@ -1,32 +1,29 @@
-﻿using LanguageLearning.Application.Auth.Login;
-using LanguageLearning.Application.Auth.Register;
-using MediatR;
+using LanguageLearning.Application.DTOs.Auth;
+using LanguageLearning.Application.Interfaces.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LanguageLearning.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IAuthService _authService;
 
-    public AuthController(IMediator mediator)
+    public AuthController(IAuthService authService)
     {
-        _mediator = mediator;
+        _authService = authService;
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(
-        RegisterCommand command)
+    public async Task<ActionResult<AuthResponse>> Register(RegisterRequest request)
     {
-        return Ok(await _mediator.Send(command));
+        return Ok(await _authService.RegisterAsync(request));
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(
-        LoginCommand command)
+    public async Task<ActionResult<AuthResponse>> Login(LoginRequest request)
     {
-        return Ok(await _mediator.Send(command));
+        return Ok(await _authService.LoginAsync(request));
     }
 }

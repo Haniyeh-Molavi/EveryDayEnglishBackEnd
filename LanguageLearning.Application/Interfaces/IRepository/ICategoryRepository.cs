@@ -1,12 +1,10 @@
-﻿using LanguageLearning.Domain.Entities;
+using LanguageLearning.Domain.Entities;
 
+namespace LanguageLearning.Application.Interfaces.IRepository;
 
-namespace LanguageLearning.Application.Interfaces.IRepository
+public interface ICategoryRepository
 {
-    public interface ICategoryRepository
-    {
-        Task AddTranslationGroupAsync(TranslationGroup group);
-        Task<Category?> GetCategoryByNameAsync(string name);
-        Task AddCategoryAsync(Category category);
-    }
+    Task<Category?> GetByNameAsync(string name);
+
+    Task AddAsync(Category category);
 }

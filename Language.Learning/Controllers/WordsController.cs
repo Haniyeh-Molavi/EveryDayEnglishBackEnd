@@ -1,27 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using static System.Net.Mime.MediaTypeNames;
+using LanguageLearning.Application.DTOs.Words;
+using LanguageLearning.Application.Interfaces.IService;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 namespace LanguageLearning.API.Controllers;
 
 [ApiController]
 [Route("api/words")]
 public class WordsController : ControllerBase
 {
-    private readonly IWordService _service;
-    public WordsController(IWordService service)
+    private readonly IWordService _wordService;
+
+    public WordsController(IWordService wordService)
     {
-        _service = service;
+        _wordService = wordService;
     }
 
+    // Add a new word. Gemini translates it into the other two languages.
+    [Authorize]
     [HttpPost]
-    public async Task<IActionResult> Create(TranslationDto translationDto)
+    public async Task<ActionResult<WordDto>> Create(CreateWordRequest request)
     {
-        if (translationDto == null)
-        {
-            throw new ArgumentNullException(nameof(translationDto));
-        }
-        await _service.CreateAsync(translationDto);
-
-        return Ok();
+        return Ok(await _wordService.CreateAsync(request));
     }
 }

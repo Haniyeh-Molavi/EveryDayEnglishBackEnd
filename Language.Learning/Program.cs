@@ -1,53 +1,42 @@
-﻿using LanguageLearning.Application;
-using LanguageLearning.Application.Interfaces.IRepository;
-using LanguageLearning.Application.Interfaces.IService;
-using LanguageLearning.Application.Services;
-using LanguageLearning.Domain.Entities;
+using LanguageLearning.API.Middlewares;
+using LanguageLearning.Application;
 using LanguageLearning.Infrastructure;
-using LanguageLearning.Infrastructure.Persistence;
-using LanguageLearning.Infrastructure.Repositories;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssembly(
-        typeof(LanguageLearning.Application.DependencyInjection).Assembly);
-});
-
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddHttpClient<IWordInfoService, GeminiWordInfoService>(client =>
+builder.Services.AddSwaggerGen(options =>
 {
-    client.BaseAddress = new Uri("https://generativelanguage.googleapis.com/v1beta/");
+    // Adds the "Authorize" button to Swagger, so you can paste your login token
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Description = "Paste the token you get from /api/auth/login"
+    });
+
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
 });
 
-builder.Services.AddScoped<IWordService, WordService>();
-builder.Services.AddScoped<IWordService, WordService>();
-
-builder.Services.AddScoped<IWordRepository, WordRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
