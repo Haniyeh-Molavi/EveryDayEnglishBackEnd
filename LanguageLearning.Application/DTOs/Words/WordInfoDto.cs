@@ -13,4 +13,8 @@ public class WordInfoDto
     public WordType Type { get; set; }
     public Gender PortugueseGender { get; set; }
     public string Category { get; set; } = string.Empty;
+
+    public string EnglishExample { get; set; } = string.Empty;
+    public string PersianExample { get; set; } = string.Empty;
+    public string PortugueseExample { get; set; } = string.Empty;
 }

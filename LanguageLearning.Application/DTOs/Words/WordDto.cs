@@ -12,6 +12,9 @@ public class WordDto
     public string PortugueseWord { get; set; } = string.Empty;
     public WordType Type { get; set; }
     public Gender PortugueseGender { get; set; }
+    public string EnglishExample { get; set; } = string.Empty;
+    public string PersianExample { get; set; } = string.Empty;
+    public string PortugueseExample { get; set; } = string.Empty;
     public Guid CategoryId { get; set; }
     public string CategoryName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
@@ -27,6 +30,9 @@ public class WordDto
             PortugueseWord = word.PortugueseWord,
             Type = word.Type,
             PortugueseGender = word.PortugueseGender,
+            EnglishExample = word.EnglishExample,
+            PersianExample = word.PersianExample,
+            PortugueseExample = word.PortugueseExample,
             CategoryId = word.CategoryId,
             CategoryName = word.Category.Name,
             CreatedAt = word.CreatedAt

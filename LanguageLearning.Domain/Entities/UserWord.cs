@@ -12,4 +12,9 @@ public class UserWord
     public Word Word { get; set; } = null!;
 
     public DateTime SavedAt { get; set; }
+
+    // Learning progress
+    public bool IsLearned { get; set; }
+
+    public DateTime? LearnedAt { get; set; }
 }

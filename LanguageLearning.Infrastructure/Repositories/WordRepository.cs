@@ -15,6 +15,40 @@ public class WordRepository : IWordRepository
         _context = context;
     }
 
+    public async Task<List<Word>> GetAllAsync(string? search, Guid? categoryId)
+    {
+        var query = _context.Words
+            .Include(w => w.Category)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.Trim().ToLower();
+
+            // Search in all three languages
+            query = query.Where(w =>
+                w.EnglishWord.ToLower().Contains(search) ||
+                w.PersianWord.ToLower().Contains(search) ||
+                w.PortugueseWord.ToLower().Contains(search));
+        }
+
+        if (categoryId != null)
+        {
+            query = query.Where(w => w.CategoryId == categoryId);
+        }
+
+        return await query
+            .OrderBy(w => w.EnglishWord)
+            .ToListAsync();
+    }
+
+    public async Task<Word?> GetByIdAsync(Guid id)
+    {
+        return await _context.Words
+            .Include(w => w.Category)
+            .FirstOrDefaultAsync(w => w.Id == id);
+    }
+
     public async Task<bool> ExistsAsync(string text, Language language)
     {
         text = text.ToLower();
@@ -31,6 +65,12 @@ public class WordRepository : IWordRepository
     public async Task AddAsync(Word word)
     {
         _context.Words.Add(word);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(Word word)
+    {
+        _context.Words.Remove(word);
         await _context.SaveChangesAsync();
     }
 }

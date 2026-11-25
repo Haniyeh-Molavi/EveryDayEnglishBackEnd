@@ -17,6 +17,13 @@ public class Word
 
     public Gender PortugueseGender { get; set; }
 
+    // One example sentence, in all three languages
+    public string EnglishExample { get; set; } = string.Empty;
+
+    public string PersianExample { get; set; } = string.Empty;
+
+    public string PortugueseExample { get; set; } = string.Empty;
+
     public Guid CategoryId { get; set; }
 
     public Category Category { get; set; } = null!;

@@ -15,4 +15,8 @@ public class CreateWordRequest
     public WordType? Type { get; set; }
     public Gender? PortugueseGender { get; set; }
     public string? Category { get; set; }
+
+    // Optional, in the same language as Word. If empty, Gemini writes one.
+    [MaxLength(300)]
+    public string? ExampleSentence { get; set; }
 }

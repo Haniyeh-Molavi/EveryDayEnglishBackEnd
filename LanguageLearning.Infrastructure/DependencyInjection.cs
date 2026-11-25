@@ -65,6 +65,8 @@ public static class DependencyInjection
         // Repositories
         services.AddScoped<IWordRepository, WordRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IUserWordRepository, UserWordRepository>();
+        services.AddScoped<ISentenceRepository, SentenceRepository>();
 
         // Gemini (translation)
         services.AddHttpClient<ITranslationService, GeminiTranslationService>(client =>

@@ -14,6 +14,13 @@ public class CategoryRepository : ICategoryRepository
         _context = context;
     }
 
+    public async Task<List<Category>> GetAllAsync()
+    {
+        return await _context.Categories
+            .OrderBy(c => c.Name)
+            .ToListAsync();
+    }
+
     public async Task<Category?> GetByNameAsync(string name)
     {
         return await _context.Categories

@@ -22,6 +22,23 @@ public class WordService : IWordService
         _translationService = translationService;
     }
 
+    public async Task<List<WordDto>> GetAllAsync(string? search, Guid? categoryId)
+    {
+        var words = await _wordRepository.GetAllAsync(search, categoryId);
+
+        return words.Select(WordDto.FromEntity).ToList();
+    }
+
+    public async Task<WordDto> GetByIdAsync(Guid id)
+    {
+        var word = await _wordRepository.GetByIdAsync(id);
+
+        if (word == null)
+            throw new KeyNotFoundException("Word not found.");
+
+        return WordDto.FromEntity(word);
+    }
+
     public async Task<WordDto> CreateAsync(CreateWordRequest request)
     {
         var text = request.Word.Trim();
@@ -41,8 +58,8 @@ public class WordService : IWordService
         if (await _wordRepository.ExistsAsync(text, request.Language))
             throw new ArgumentException($"The word \"{text}\" already exists.");
 
-        // Ask Gemini for the translations, type, gender and category
-        var info = await _translationService.GetWordInfoAsync(text, request.Language);
+        // Ask Gemini for the translations, type, gender, category and example sentence
+        var info = await _translationService.GetWordInfoAsync(text, request.Language, request.ExampleSentence?.Trim());
 
         // Values the user sent win over the ones Gemini suggests
         var type = request.Type is null or WordType.None ? info.Type : request.Type.Value;
@@ -65,6 +82,9 @@ public class WordService : IWordService
             PortugueseWord = info.Portuguese,
             Type = type,
             PortugueseGender = gender,
+            EnglishExample = info.EnglishExample,
+            PersianExample = info.PersianExample,
+            PortugueseExample = info.PortugueseExample,
             CategoryId = category.Id,
             Category = category,
             CreatedAt = DateTime.UtcNow
@@ -73,6 +93,17 @@ public class WordService : IWordService
         await _wordRepository.AddAsync(word);
 
         return WordDto.FromEntity(word);
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var word = await _wordRepository.GetByIdAsync(id);
+
+        if (word == null)
+            throw new KeyNotFoundException("Word not found.");
+
+        // Also removes the word from every user's list (cascade delete)
+        await _wordRepository.DeleteAsync(word);
     }
 
     private async Task<Category> GetOrCreateCategoryAsync(string name)
