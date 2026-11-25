@@ -134,7 +134,7 @@ public class GeminiTranslationService : ITranslationService
         if (string.IsNullOrWhiteSpace(apiKey))
             throw new InvalidOperationException("Gemini API key is missing. Set it with: dotnet user-secrets set \"Gemini:ApiKey\" \"<your key>\"");
 
-        var model = _config["Gemini:Model"] ?? "gemini-2.5-flash";
+        var model = _config["Gemini:Model"] ?? "gemini-3.8-flash";
 
         var body = new
         {
